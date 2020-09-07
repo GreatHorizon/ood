@@ -6,7 +6,7 @@ typedef std::function<void()> FlyBehavior;
 typedef std::function<void()> QuackBehavior;
 typedef std::function<void()> DanceBehavior;
 
-FlyBehavior FlyWithWings()
+FlyBehavior MakeFlyWithWings()
 {	
 	int flightCount = 0;
 	return [flightCount]() mutable 
@@ -115,7 +115,7 @@ class CRedHeadDuck : public CDuck
 {
 public:
 	CRedHeadDuck()
-		: CDuck(FlyWithWings(), Quack, DanceMinuet)
+		: CDuck(MakeFlyWithWings(), Quack, DanceMinuet)
 	{
 	}
 
@@ -129,7 +129,7 @@ class CMallardDuck : public CDuck
 {
 public:
 	CMallardDuck()
-		: CDuck(FlyWithWings(), Quack, DanceWaltz)
+		: CDuck(MakeFlyWithWings(), Quack, DanceWaltz)
 	{
 	}
 
@@ -197,7 +197,7 @@ int main()
 	a.SetFlyBehavior(FlyNoWay);
 	PlayWithDuck(a);
 
-	c.SetFlyBehavior(FlyWithWings());
+	c.SetFlyBehavior(MakeFlyWithWings());
 	PlayWithDuck(c);
 	return 0;
 }
