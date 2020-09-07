@@ -126,6 +126,7 @@ public:
 
 	void SetFlyBehavior(std::unique_ptr<IFlyBehavior>&& flyBehavior)
 	{
+		assert(flyBehavior);
 		m_flyBehavior = move(flyBehavior);
 	}
 
