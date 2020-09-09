@@ -23,10 +23,11 @@ class CFlyWithWings : public IFlyBehavior
 public:
 	void Fly() override
 	{
-		std::cout << "Im flying with wings!\n";
 		m_flightCount++;
+		std::cout << "Im flying with wings!\n";
 		std::cout << "Flights number: " << m_flightCount << "\n";
 	}
+
 private:
 	int m_flightCount = 0;
 };
