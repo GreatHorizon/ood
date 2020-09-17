@@ -6,10 +6,13 @@
 #include <map>
 
 template <typename T>
+class IObservable;
+
+template <typename T>
 class IObserver
 {
 public:
-	virtual void Update(T const& data) = 0;
+	virtual void Update(IObservable<T> const& observable) = 0;
 	virtual ~IObserver() = default;
 };
 
@@ -38,17 +41,16 @@ public:
 				return;
 			}
 		}
+
 		m_observers.emplace(priority, &observer);
 	}
 
 	void NotifyObservers() override
 	{
-		T data = GetChangedData();
 		auto observers = m_observers;
-
 		for (auto it = observers.rbegin(); it != observers.rend(); it++)
 		{
-			it->second->Update(data);
+			it->second->Update(*this);
 		}
 	}
 

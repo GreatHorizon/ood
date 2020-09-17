@@ -1,12 +1,13 @@
 #pragma once
 #include "Observer.h"
 #include <iostream>
+#include <string>
 
 struct SWeatherInfo
 {
-	double temperature = 0;
-	double humidity = 0;
-	double pressure = 0;
+	double m_temperature = 0;
+	double m_humidity = 0;
+	double m_pressure = 0;
 };
 
 class CDisplay : public IObserver<SWeatherInfo>
@@ -18,9 +19,9 @@ private:
 	*/
 	void Update(SWeatherInfo const& data) override
 	{
-		std::cout << "Current Temp " << data.temperature << "\n";
-		std::cout << "Current Hum " << data.humidity << "\n";
-		std::cout << "Current Pressure " << data.pressure << "\n";
+		std::cout << "Current Temp " << data.m_temperature << "\n";
+		std::cout << "Current Hum " << data.m_humidity << "\n";
+		std::cout << "Current Pressure " << data.m_pressure << "\n";
 		std::cout << "----------------" << "\n";
 	}
 };	
@@ -65,11 +66,6 @@ private:
 	class SensorStatsInfo 
 	{
 	public:
-		SensorStatsInfo(std::string name)
-			: m_sensorName(name)
-		{
-		}
-
 		void CalculateStatsInfo(double newValue)
 		{
 			if (m_minSensorValue > newValue)
@@ -86,12 +82,11 @@ private:
 			++m_countAcc;
 		}
 
-		void Show()
+		std::string ToString()
 		{
-			std::cout << "Max " << m_sensorName << " " << m_maxSensorValue << "\n";
-			std::cout << "Min " << m_sensorName << " " << m_minSensorValue << "\n";
-			std::cout << "Average " << m_sensorName << " " << (m_accSensorValue / m_countAcc) << "\n";
-			std::cout << "----------------" << "\n";
+			return "Max " + std::to_string(m_maxSensorValue) + "\n"
+				+ "Min " + std::to_string(m_minSensorValue) + "\n"
+				+ "Average " + std::to_string(m_accSensorValue / m_countAcc) + "\n";
 		}
 
 	private:
@@ -105,18 +100,18 @@ private:
 
 	void Update(SWeatherInfo const& data) override
 	{
-		m_tempStats.CalculateStatsInfo(data.temperature);
-		m_humStats.CalculateStatsInfo(data.humidity);
-		m_pressureStats.CalculateStatsInfo(data.pressure);
+		m_tempStats.CalculateStatsInfo(data.m_temperature);
+		m_humStats.CalculateStatsInfo(data.m_humidity);
+		m_pressureStats.CalculateStatsInfo(data.m_pressure);
 
-		m_tempStats.Show();
-		m_humStats.Show();
-		m_pressureStats.Show();
+		std::cout << "Temperature\n" << m_tempStats.ToString() << "----------------\n";
+		std::cout << "Humidity\n" << m_humStats.ToString() << "----------------\n";
+		std::cout << "Pressure\n" << m_pressureStats.ToString() << "----------------\n";
 	}
 	
-	SensorStatsInfo m_tempStats = SensorStatsInfo("Temp");
-	SensorStatsInfo m_humStats = SensorStatsInfo("Hum");
-	SensorStatsInfo m_pressureStats = SensorStatsInfo("Pressure");
+	SensorStatsInfo m_tempStats;
+	SensorStatsInfo m_humStats;
+	SensorStatsInfo m_pressureStats;
 };
 
 class CWeatherData : public CObservable<SWeatherInfo>
@@ -158,9 +153,9 @@ protected:
 	SWeatherInfo GetChangedData()const override
 	{
 		SWeatherInfo info;
-		info.temperature = GetTemperature();
-		info.humidity = GetHumidity();
-		info.pressure = GetPressure();
+		info.m_temperature = GetTemperature();
+		info.m_humidity = GetHumidity();
+		info.m_pressure = GetPressure();
 		return info;
 	}
 private:
