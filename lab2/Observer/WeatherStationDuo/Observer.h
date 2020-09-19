@@ -12,7 +12,7 @@ template <typename T>
 class IObserver
 {
 public:
-	virtual void Update(IObservable<T> const& observable) = 0;
+	virtual void Update(T const& data, IObservable<T> const& observable) = 0;
 	virtual ~IObserver() = default;
 };
 
@@ -47,10 +47,11 @@ public:
 
 	void NotifyObservers() override
 	{
+		T data = GetChangedData();
 		auto observers = m_observers;
 		for (auto it = observers.rbegin(); it != observers.rend(); it++)
 		{
-			it->second->Update(*this);
+			it->second->Update(data, *this);
 		}
 	}
 

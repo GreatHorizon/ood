@@ -11,7 +11,6 @@ struct SWeatherInfo
 	double m_pressure = 0;
 };
 
-
 class CWeatherData : public CObservable<SWeatherInfo>
 {
 public:
@@ -73,23 +72,21 @@ public:
 	}
 
 private:
-	void Update(IObservable<SWeatherInfo> const& observable) override
+	void Update(SWeatherInfo const& data, IObservable<SWeatherInfo> const& observable) override
 	{
 		CWeatherData sourceInfo;
 		if (&observable == &m_wdIn)
 		{
 			m_outStream << "Internal info\n";
-			sourceInfo = m_wdIn;
 		}
 		else
 		{
 			m_outStream << "External info\n";
-			sourceInfo = m_wdOut;
 		}
 
-		m_outStream << "Current Temp " << sourceInfo.GetTemperature() << "\n";
-		m_outStream << "Current Hum " << sourceInfo.GetHumidity() << "\n";
-		m_outStream << "Current Pressure " << sourceInfo.GetPressure() << "\n";
+		m_outStream << "Current Temp " << data.m_temperature << "\n";
+		m_outStream << "Current Hum " << data.m_humidity << "\n";
+		m_outStream << "Current Pressure " << data.m_pressure << "\n";
 		m_outStream << "----------------" << "\n";
 	}
 
@@ -142,17 +139,17 @@ private:
 	};
 
 
-	void Update(IObservable<SWeatherInfo> const& observable) override
+	void Update(SWeatherInfo const& data, IObservable<SWeatherInfo> const& observable) override
 	{
 		if (&observable == &m_wdIn)
 		{
-			m_internalTempStats.CalculateStatsInfo(m_wdIn.GetTemperature());
+			m_internalTempStats.CalculateStatsInfo(data.m_temperature);
 			m_outStream << "Internal temperature stats\n";
 			m_outStream << m_internalTempStats.ToString() << "----------------\n";
 		}
 		else
 		{
-			m_externalTempStats.CalculateStatsInfo(m_wdOut.GetTemperature());
+			m_externalTempStats.CalculateStatsInfo(data.m_temperature);
 			m_outStream << "External temperature stats\n";
 			m_outStream << m_externalTempStats.ToString() << "----------------\n";
 		}
