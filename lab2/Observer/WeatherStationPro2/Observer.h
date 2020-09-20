@@ -8,11 +8,11 @@
 
 enum class Event
 {
-	Temperature, 
-	Humidity, 
-	Pressure,
-	WindSpeed, 
-	WindDirection
+	TEMPERATURE, 
+	HUMIDITY, 
+	PRESSURE,
+	WINDSPEED, 
+	WINDDIRECTION
 };
 
 template <typename T>

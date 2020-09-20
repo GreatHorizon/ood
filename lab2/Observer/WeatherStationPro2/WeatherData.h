@@ -179,31 +179,31 @@ public:
 		if (m_humidity != humidity)
 		{
 			m_humidity = humidity;
-			changedEvents.insert(Event::Humidity);
+			changedEvents.insert(Event::HUMIDITY);
 		}
 		
 		if (m_temperature != temp)
 		{
 			m_temperature = temp;
-			changedEvents.insert(Event::Temperature);
+			changedEvents.insert(Event::TEMPERATURE);
 		}
 		
 		if (m_pressure != pressure)
 		{
 			m_pressure = pressure;
-			changedEvents.insert(Event::Pressure);
+			changedEvents.insert(Event::PRESSURE);
 		}
 
 		if (m_windInfo.m_windSpeed != windSpeed)
 		{
 			m_windInfo.m_windSpeed = windSpeed;
-			changedEvents.insert(Event::WindSpeed);
+			changedEvents.insert(Event::WINDSPEED);
 		}
 
 		if (m_windInfo.m_windDirection != windDirection)
 		{
 			m_windInfo.m_windDirection = windDirection;
-			changedEvents.insert(Event::WindDirection);
+			changedEvents.insert(Event::WINDDIRECTION);
 		}
 		
 		MeasurementsChanged(changedEvents);
