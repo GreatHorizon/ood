@@ -58,7 +58,7 @@ public:
 	{
 		for (auto it = m_observers.begin(); it != m_observers.end(); it++)
 		{
-			if (it->second = &observer)
+			if (it->second == &observer)
 			{
 				m_observers.erase(it);
 				break;

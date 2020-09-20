@@ -31,41 +31,10 @@ private:
 		std::cout << "Current Temp " << data.m_temperature << "\n";
 		std::cout << "Current Hum " << data.m_humidity << "\n";
 		std::cout << "Current Pressure " << data.m_pressure << "\n";
+		std::cout << "Current Wind speed " << data.m_windInfo.m_windSpeed << "\n";
+		std::cout << "Current Wind direction " << data.m_windInfo.m_windDirection << "\n";
+		std::cout << "---------------\n";
 	}
-};
-
-class CRemovingObserver : public IObserver<SWeatherInfo>
-{
-public:
-	CRemovingObserver(CObservable<SWeatherInfo>& observable)
-		: m_observable(&observable)
-	{}
-private:
-	void Update(SWeatherInfo const& data) override
-	{
-		m_observable->RemoveObserver(*this);
-		std::cout << "This observer has removed subscription in update method\n";
-	}
-
-	CObservable<SWeatherInfo>* m_observable;
-};
-
-class CPriorityObserver : public IObserver<SWeatherInfo>
-{
-public:
-	CPriorityObserver(std::string name, std::ostream& stream)
-		: m_name(name)
-		, m_outStream(stream)
-	{}
-
-	void Update(SWeatherInfo const& data) override
-	{
-		m_outStream << "Now updating observer " << m_name << "\n";
-	}
-
-private:
-	std::string m_name;
-	std::ostream& m_outStream;
 };
 
 class DirectionSensorStats
@@ -199,22 +168,45 @@ public:
 		return m_windInfo.m_windSpeed;
 	}
 
-	void MeasurementsChanged()
+	void MeasurementsChanged(std::set<Event> const& changedEvents)
 	{
-		NotifyObservers();
+		NotifyObservers(changedEvents);
 	}
 
 	void SetMeasurements(double temp, double humidity, double pressure, double windSpeed, double windDirection)
 	{
-		m_humidity = humidity;
-		m_temperature = temp;
-		m_pressure = pressure;
-		SWindInfo info;
-		info.m_windDirection = windDirection;
-		info.m_windSpeed = windSpeed;
-		m_windInfo = info;
+		std::set<Event> changedEvents;
+		if (m_humidity != humidity)
+		{
+			m_humidity = humidity;
+			changedEvents.insert(Event::Humidity);
+		}
+		
+		if (m_temperature != temp)
+		{
+			m_temperature = temp;
+			changedEvents.insert(Event::Temperature);
+		}
+		
+		if (m_pressure != pressure)
+		{
+			m_pressure = pressure;
+			changedEvents.insert(Event::Pressure);
+		}
 
-		MeasurementsChanged();
+		if (m_windInfo.m_windSpeed != windSpeed)
+		{
+			m_windInfo.m_windSpeed = windSpeed;
+			changedEvents.insert(Event::WindSpeed);
+		}
+
+		if (m_windInfo.m_windDirection != windDirection)
+		{
+			m_windInfo.m_windDirection = windDirection;
+			changedEvents.insert(Event::WindDirection);
+		}
+		
+		MeasurementsChanged(changedEvents);
 	}
 
 protected:
@@ -232,6 +224,6 @@ private:
 	double m_humidity = 0.0;
 	double m_pressure = 760.0;
 	SWindInfo m_windInfo;
-	
+
 };
 

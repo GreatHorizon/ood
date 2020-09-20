@@ -7,8 +7,8 @@
 
 struct SWindInfo
 {
-	double m_windSpeed;
-	double m_windDirection;
+	double m_windSpeed = 0;
+	double m_windDirection = 0;
 };
 
 struct SWeatherInfo
@@ -165,7 +165,7 @@ public:
 		return m_pressure;
 	}
 
-	unsigned GetWindDirection() const
+	double GetWindDirection() const
 	{
 		return m_windInfo.m_windDirection;
 	}
@@ -220,19 +220,19 @@ class CWeatherData : public CObservable<SWeatherInfo>
 {
 public:
 	// Температура в градусах Цельсия
-	double GetTemperature()const
+	double GetTemperature() const
 	{
 		return m_temperature;
 	}
 
 	// Относительная влажность (0...100)
-	double GetHumidity()const
+	double GetHumidity() const
 	{
 		return m_humidity;
 	}
 
 	// Атмосферное давление (в мм.рт.ст)
-	double GetPressure()const
+	double GetPressure() const
 	{
 		return m_pressure;
 	}
@@ -252,7 +252,7 @@ public:
 	}
 
 protected:
-	SWeatherInfo GetChangedData()const override
+	SWeatherInfo GetChangedData() const override
 	{
 		SWeatherInfo info;
 		info.m_temperature = GetTemperature();
