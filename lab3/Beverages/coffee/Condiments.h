@@ -149,7 +149,7 @@ protected:
 
 	std::string GetCondimentDescription() const override
 	{
-		return std::to_string(m_quantity) + "square of chocolate";
+		return std::to_string(m_quantity) + " square of chocolate";
 	}
 
 private:

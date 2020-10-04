@@ -90,7 +90,7 @@ enum class TeaType
 class CTea : public CBeverage
 {
 public:
-	CTea(TeaType type  = TeaType::BLACK_TEA, const std::string& description = "Tea")
+	CTea(TeaType type = TeaType::BLACK_TEA, const std::string& description = "Tea")
 		: CBeverage(description)
 		, m_teaType(type)
 	{
