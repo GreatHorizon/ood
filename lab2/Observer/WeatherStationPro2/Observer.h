@@ -6,7 +6,7 @@
 #include <map>
 #include <algorithm>
 
-enum class Event
+enum class EventType
 {
 	TEMPERATURE, 
 	HUMIDITY, 
@@ -15,86 +15,180 @@ enum class Event
 	WINDDIRECTION
 };
 
-template <typename T>
+class Event
+{
+public:
+	EventType GetType() const
+	{
+		return m_type;
+	}
+	virtual ~Event() = default;
+
+	double GetData() const
+	{
+		return m_data;
+	}
+protected:
+	Event(EventType type, double data)
+		: m_type(type)
+		, m_data(data)
+	{
+	}
+
+	EventType m_type;
+	double m_data;
+};
+
+class TemperatureChanged : public Event
+{
+public:
+	TemperatureChanged(double data)
+		: Event(EventType::TEMPERATURE, data)
+
+	{
+	}
+
+};
+
+class HumidityChanged : public Event
+{
+public:
+	HumidityChanged(double data)
+		: Event(EventType::HUMIDITY, data)
+	{
+	}
+
+};
+
+class PressureChanged : public Event
+{
+public:
+	PressureChanged(double data)
+		: Event(EventType::PRESSURE, data)
+	{
+	}
+
+};
+
+class WindSpeedChanged : public Event
+{
+public:
+	WindSpeedChanged(double data)
+		: Event(EventType::WINDSPEED, data)
+
+	{
+	}
+};
+
+class WindDirectionChanged : public Event
+{
+public:
+	WindDirectionChanged(double data)
+		: Event(EventType::WINDDIRECTION, data)
+	{
+	}
+};
+
+template <typename Event>
 class IObserver
 {
 public:
-	virtual void Update(T const& data) = 0;
+	virtual void Update(Event event) = 0;
 	virtual ~IObserver() = default;
 };
 
-template <typename T>
+template <typename T, typename Event>
 class IObservable
 {
 public:
 	virtual ~IObservable() = default;
-	virtual void RegisterObserver(IObserver<T>& observer, std::set<Event> const& events, int priority) = 0;
+	virtual void RegisterObserver(IObserver<Event>& observer, std::set<EventType> const& events, int priority) = 0;
 	virtual void NotifyObservers(std::set<Event> const& changedEvents) = 0;
-	virtual void RemoveObserver(IObserver<T>& observer) = 0;
+	virtual void RemoveObserver(IObserver<Event>& observer) = 0;
 };
 
-template <class T>
-class CObservable : public IObservable<T>
+template <class T, class Event>
+class CObservable : public IObservable<T, Event>
 {
 public:
-	typedef IObserver<T> ObserverType;
+	typedef IObserver<Event> ObserverType;
 
-	void RegisterObserver(ObserverType& observer, std::set<Event> const& events, int priority) override
+	void RegisterObserver(ObserverType& observer, std::set<EventType> const& events, int priority) override
 	{
-		for (auto it = m_observers.begin(); it != m_observers.end(); it++)
+		for (auto event : events)
+		{
+			SubscribeNewEvent(observer, event, priority);
+		}
+	}
+
+	bool AlreadySubscribed(std::multimap<unsigned, ObserverType*> observers, ObserverType& observer)
+	{
+		for (auto it = observers.begin(); it != observers.end(); it++)
 		{
 			if (it->second == &observer)
 			{
-				return;
+				return true;
 			}
 		}
 
-		m_observers.emplace(priority, &observer);
-		m_observersEvents.emplace(&observer, events);
+		return false;
 	}
 
-	void NotifyObservers(std::set<Event> const& changedEvents) override
+	void NotifyObservers(std::set<Event> const& changedEvent) override
 	{
-		T data = GetChangedData();
-		auto observers = m_observers;
-
-		for (auto it = observers.rbegin(); it != observers.rend(); it++)
+		for (auto event : changedEvent)
 		{
-			if (IsEventSubscriber(it->second, changedEvents))
+			auto it = m_observersEvent.find(event->GetType());
+			if (it != m_observersEvent.end())
 			{
-				it->second->Update(data);
+				auto observers = it->second;
+				for (auto i = observers.rbegin(); i != observers.rend(); i++)
+				{
+					i->second->Update(event);
+				}
 			}
 		}
 	}
 
 	void RemoveObserver(ObserverType& observer) override
 	{
-		for (auto it = m_observers.begin(); it != m_observers.end(); it++)
+		for (auto it = m_observersEvent.begin(); it != m_observersEvent.end(); it++)
 		{
-			if (it->second == &observer)
+			QuitSubscription(observer, it->first);
+		}
+	}
+
+	void SubscribeNewEvent(ObserverType& observer, EventType newEvent, int priority)
+	{
+		auto it = m_observersEvent.find(newEvent);
+
+		if (it == m_observersEvent.end())
+		{
+			std::multimap<unsigned, ObserverType*> observersMap = { {priority, &observer} };
+			m_observersEvent.emplace(newEvent, observersMap);
+		}
+		else
+		{
+			if (!AlreadySubscribed(it->second, observer))
 			{
-				m_observers.erase(it);
-				m_observersEvents.erase(m_observersEvents.find(&observer));
-				return;
+				it->second.emplace(priority, &observer);
 			}
 		}
 	}
 
-	void SubscribeNewEvent(ObserverType& observer, Event const& newEvent)
+	void QuitSubscription(ObserverType& observer, EventType const& removingEvent)
 	{
-		auto it = m_observersEvents.find(&observer);
-		if (it != m_observersEvents.end())
+		auto it = m_observersEvent.find(removingEvent);
+		if (it != m_observersEvent.end())
 		{
-			it->second.insert(newEvent);
-		}
-	}
-
-	void QuitSubscription(ObserverType& observer, Event const& removingEvent)
-	{
-		auto it = m_observersEvents.find(&observer);
-		if (it != m_observersEvents.end())
-		{
-			it->second.erase(removingEvent);
+			for (auto iterator = it->second.begin(); iterator != it->second.end(); iterator++)
+			{
+				if (iterator->second = &observer)
+				{
+					it->second.erase(iterator);
+					return;
+				}
+			}
 		}
 	}
 
@@ -102,18 +196,6 @@ protected:
 	virtual T GetChangedData()const = 0;
 
 private:
-
-	bool IsEventSubscriber(ObserverType* observer, std::set<Event> const& events)
-	{
-		auto foundSubscriber = m_observersEvents.find(observer);
-		return std::any_of(events.begin(), events.end(), [&](Event event)
-			{
-				return foundSubscriber->second.find(event) != foundSubscriber->second.end();
-			}
-		);
-	}
-
-	std::multimap<unsigned, ObserverType*> m_observers;
-	std::map<ObserverType*, std::set<Event>> m_observersEvents;
+	std::map<EventType, std::multimap<unsigned, ObserverType*>> m_observersEvent;
 };
 

@@ -19,21 +19,38 @@ struct SWeatherInfo
 	SWindInfo m_windInfo;
 };
 
-class CDisplay : public IObserver<SWeatherInfo>
+class CDisplay : public IObserver<Event*>
 {
 private:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 		Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
 		остается публичным
 	*/
-	void Update(SWeatherInfo const& data) override
+	void Update(Event* event) override
 	{
-		std::cout << "Current Temp " << data.m_temperature << "\n";
-		std::cout << "Current Hum " << data.m_humidity << "\n";
-		std::cout << "Current Pressure " << data.m_pressure << "\n";
-		std::cout << "Current Wind speed " << data.m_windInfo.m_windSpeed << "\n";
-		std::cout << "Current Wind direction " << data.m_windInfo.m_windDirection << "\n";
-		std::cout << "---------------\n";
+		std::string mesurementName;
+		EventType type = event->GetType();
+
+		switch (type)
+		{
+		case EventType::TEMPERATURE:
+			mesurementName = "Temperature";
+			break;
+		case EventType::HUMIDITY:
+			mesurementName = "Humidity";
+			break;
+		case EventType::PRESSURE:
+			mesurementName = "Pressure";
+			break;
+		case EventType::WINDSPEED:
+			mesurementName = "Wind speed";
+			break;
+		case EventType::WINDDIRECTION:
+			mesurementName = "Wind directiron";
+			break;
+		}
+
+		std::cout << "Current " << mesurementName << " is "<<event->GetData() << "\n";
 	}
 };
 
@@ -78,7 +95,7 @@ private:
 	SProportion AverageDirection;
 };
 
-class CStatsDisplay : public IObserver<SWeatherInfo>
+class CStatsDisplay : public IObserver<Event*>
 {
 private:
 	class SensorStatsInfo
@@ -114,19 +131,36 @@ private:
 		unsigned m_countAcc = 0;
 	};
 
-	void Update(SWeatherInfo const& data) override
+	void Update(Event* event) override
 	{
-		m_tempStats.CalculateStatsInfo(data.m_temperature);
-		m_humStats.CalculateStatsInfo(data.m_humidity);
-		m_pressureStats.CalculateStatsInfo(data.m_pressure);
-		m_windSpeedStats.CalculateStatsInfo(data.m_windInfo.m_windSpeed);
-		m_windDirectionStats.CalculateStatsInfo(data.m_windInfo.m_windDirection);
+		std::string mesurementName;
+		EventType type = event->GetType();
+		SensorStatsInfo currentStats;
 
-		std::cout << "Temperature\n" << m_tempStats.ToString() << "----------------\n";
-		std::cout << "Humidity\n" << m_humStats.ToString() << "----------------\n";
-		std::cout << "Pressure\n" << m_pressureStats.ToString() << "----------------\n";
-		std::cout << "Wind speed\n" << m_windSpeedStats.ToString() << "----------------\n";
-		std::cout << "Wind direction\n" << m_windDirectionStats.ToString() << "----------------\n";
+		switch (type)
+		{
+		case EventType::TEMPERATURE: 
+			m_tempStats.CalculateStatsInfo(event->GetData());
+			std::cout << "Temperature\n" << m_tempStats.ToString() << "----------------\n";
+			break;
+		case EventType::HUMIDITY:
+			m_humStats.CalculateStatsInfo(event->GetData());
+			std::cout << "Humidity\n" << m_humStats.ToString() << "----------------\n";
+			break;
+		case EventType::PRESSURE:
+			m_pressureStats.CalculateStatsInfo(event->GetData());
+			std::cout << "Pressure\n" << m_pressureStats.ToString() << "----------------\n";
+			break;
+		case EventType::WINDSPEED:
+			m_windSpeedStats.CalculateStatsInfo(event->GetData());
+			std::cout << "Wind speed\n" << m_windSpeedStats.ToString() << "----------------\n";
+			break;
+		case EventType::WINDDIRECTION:
+			m_windDirectionStats.CalculateStatsInfo(event->GetData());
+			std::cout << "Wind direction\n" << m_windDirectionStats.ToString() << "----------------\n";
+			break;
+		}
+
 	}
 
 	SensorStatsInfo m_tempStats;
@@ -137,7 +171,7 @@ private:
 };
 
 
-class CWeatherData : public CObservable<SWeatherInfo>
+class CWeatherData : public CObservable<SWeatherInfo, Event*>
 {
 public:
 	// Температура в градусах Цельсия
@@ -168,42 +202,42 @@ public:
 		return m_windInfo.m_windSpeed;
 	}
 
-	void MeasurementsChanged(std::set<Event> const& changedEvents)
+	void MeasurementsChanged(std::set<Event*> const& changedEvents)
 	{
 		NotifyObservers(changedEvents);
 	}
 
 	void SetMeasurements(double temp, double humidity, double pressure, double windSpeed, double windDirection)
 	{
-		std::set<Event> changedEvents;
+		std::set<Event*> changedEvents;
 		if (m_humidity != humidity)
 		{
 			m_humidity = humidity;
-			changedEvents.insert(Event::HUMIDITY);
+			changedEvents.insert(&HumidityChanged(humidity));
 		}
-		
+
 		if (m_temperature != temp)
 		{
 			m_temperature = temp;
-			changedEvents.insert(Event::TEMPERATURE);
+			changedEvents.insert(&TemperatureChanged(temp));
 		}
-		
+
 		if (m_pressure != pressure)
 		{
 			m_pressure = pressure;
-			changedEvents.insert(Event::PRESSURE);
+			changedEvents.insert(&PressureChanged(pressure));
 		}
 
 		if (m_windInfo.m_windSpeed != windSpeed)
 		{
 			m_windInfo.m_windSpeed = windSpeed;
-			changedEvents.insert(Event::WINDSPEED);
+			changedEvents.insert(&WindSpeedChanged(windSpeed));
 		}
 
 		if (m_windInfo.m_windDirection != windDirection)
 		{
 			m_windInfo.m_windDirection = windDirection;
-			changedEvents.insert(Event::WINDDIRECTION);
+			changedEvents.insert(&WindDirectionChanged(windDirection));
 		}
 		
 		MeasurementsChanged(changedEvents);
