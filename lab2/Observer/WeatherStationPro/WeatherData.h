@@ -71,7 +71,7 @@ private:
 class DirectionSensorStats
 {
 public:
-	std::string ToString()
+	std::string ToString() const
 	{
 		double angle = ToDegrees(atan2(AverageDirection.y, AverageDirection.x));
 
@@ -96,12 +96,12 @@ public:
 	};
 
 private:
-	double ToRadians(double angle)
+	double ToRadians(double angle) const
 	{
 		return angle * M_PI / 180;
 	}
 
-	double ToDegrees(double angle)
+	double ToDegrees(double angle) const
 	{
 		return angle * 180 / M_PI;
 	}
@@ -131,7 +131,7 @@ private:
 			++m_countAcc;
 		}
 
-		std::string ToString()
+		std::string ToString() const
 		{
 			return "Max " + std::to_string(m_maxSensorValue) + "\n"
 				+ "Min " + std::to_string(m_minSensorValue) + "\n"

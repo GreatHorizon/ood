@@ -22,7 +22,7 @@ struct SWeatherInfo
 class DirectionSensorStats
 {
 public:
-	std::string ToString()
+	std::string ToString() const
 	{
 		double angle = ToDegrees(atan2(AverageDirection.y, AverageDirection.x));
 
@@ -47,12 +47,12 @@ public:
 	};
 
 private:
-	double ToRadians(double angle)
+	double ToRadians(double angle) const
 	{
 		return angle * M_PI / 180;
 	}
 
-	double ToDegrees(double angle)
+	double ToDegrees(double angle) const
 	{
 		return angle * 180 / M_PI;
 	}
@@ -79,7 +79,7 @@ public:
 		++m_countAcc;
 	}
 
-	std::string ToString()
+	std::string ToString() const
 	{
 		return "Max " + std::to_string(m_maxSensorValue) + "\n"
 			+ "Min " + std::to_string(m_minSensorValue) + "\n"
@@ -105,7 +105,7 @@ public:
 		m_windDirectionStats.CalculateStatsInfo(data.m_windInfo.m_windDirection);
 	}
 
-	void ShowStats()
+	void ShowStats() const
 	{
 		std::cout << "Temperature\n" << m_tempStats.ToString() << "----------------\n";
 		std::cout << "Humidity\n" << m_humStats.ToString() << "----------------\n";
@@ -132,7 +132,7 @@ public:
 		m_pressureStats.CalculateStatsInfo(data.m_pressure);
 	}
 
-	void ShowStats()
+	void ShowStats() const
 	{
 		std::cout << "Temperature\n" << m_tempStats.ToString() << "----------------\n";
 		std::cout << "Humidity\n" << m_humStats.ToString() << "----------------\n";
