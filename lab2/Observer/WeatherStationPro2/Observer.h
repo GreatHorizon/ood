@@ -47,7 +47,6 @@ public:
 
 	{
 	}
-
 };
 
 class HumidityChanged : public Event
@@ -102,9 +101,9 @@ class IObservable
 {
 public:
 	virtual ~IObservable() = default;
-	virtual void RegisterObserver(IObserver<Event>& observer, std::set<EventType> const& events, int priority) = 0;
+	virtual void RegisterObserver(IObserver<Event> const& observer, std::set<EventType> const& events, int priority) = 0;
 	virtual void NotifyObservers(std::set<Event> const& changedEvents) = 0;
-	virtual void RemoveObserver(IObserver<Event>& observer) = 0;
+	virtual void RemoveObserver(IObserver<Event> const& observer) = 0;
 };
 
 template <class T, class Event>
@@ -113,7 +112,7 @@ class CObservable : public IObservable<T, Event>
 public:
 	typedef IObserver<Event> ObserverType;
 
-	void RegisterObserver(ObserverType& observer, std::set<EventType> const& events, int priority) override
+	void RegisterObserver(ObserverType const& observer, std::set<EventType> const& events, int priority) override
 	{
 		for (auto event : events)
 		{
@@ -121,7 +120,7 @@ public:
 		}
 	}
 
-	bool AlreadySubscribed(std::multimap<unsigned, ObserverType*> observers, ObserverType& observer)
+	bool IsSubscribed(std::multimap<unsigned, ObserverType*> const& observers, ObserverType& observer) const
 	{
 		for (auto it = observers.begin(); it != observers.end(); it++)
 		{
@@ -158,7 +157,7 @@ public:
 		}
 	}
 
-	void SubscribeNewEvent(ObserverType& observer, EventType newEvent, int priority)
+	void SubscribeNewEvent(ObserverType const& observer, EventType newEvent, int priority)
 	{
 		auto it = m_observersEvent.find(newEvent);
 
@@ -169,14 +168,14 @@ public:
 		}
 		else
 		{
-			if (!AlreadySubscribed(it->second, observer))
+			if (!IsSubscribed(it->second, observer))
 			{
 				it->second.emplace(priority, &observer);
 			}
 		}
 	}
 
-	void QuitSubscription(ObserverType& observer, EventType const& removingEvent)
+	void QuitSubscription(ObserverType const& observer, EventType const& removingEvent)
 	{
 		auto it = m_observersEvent.find(removingEvent);
 		if (it != m_observersEvent.end())

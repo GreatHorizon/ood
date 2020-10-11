@@ -3,8 +3,7 @@
 int main()
 {
 	CWeatherData wd;
-	CWeatherData wd1;
-
+	
 	CStatsDisplay obs;
 
 	wd.RegisterObserver(obs, 1);
