@@ -131,6 +131,7 @@ private:
 	LiquorType m_type;
 };
 
+
 class CChocolate : public CCondimentDecorator
 {
 public:

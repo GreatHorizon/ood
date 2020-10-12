@@ -1,13 +1,13 @@
 #pragma once
 
-#include "IStreamDecorator.h"
+#include "CInputStreamDecorator.h"
 #include "CEncoder.h"
 
-class CInputStreamDectyptor : public IStreamDecorator
+class CInputStreamDectyptor : public CInputStreamDecorator
 {
 public:
 	CInputStreamDectyptor(std::unique_ptr<IInputStream>&& stream, unsigned key)
-		: IStreamDecorator(std::move(stream))
+		: CInputStreamDecorator(std::move(stream))
 		, m_decoder(CEncoder(key))
 	{
 	}
@@ -26,7 +26,7 @@ public:
 			{
 				data[i] = ReadByte();
 			}
-			catch (std::ios_base::failure)
+			catch (std::ios_base::failure&)
 			{
 				return i;
 			}

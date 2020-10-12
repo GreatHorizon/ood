@@ -4,11 +4,10 @@
 #include <vector>
 #include <memory>
 
-
-class COStreamDecorator : public IOutputStream
+class COutputStreamDecorator : public IOutputStream
 {
 protected:
-	COStreamDecorator(std::unique_ptr<IOutputStream>&& stream)
+	COutputStreamDecorator(std::unique_ptr<IOutputStream>&& stream)
 		: m_stream(std::move(stream))
 	{
 	}

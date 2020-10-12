@@ -18,49 +18,49 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="OStream.h">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="IStreamDecorator.h">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IStream.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="RLEPacket.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="CFileInputStream.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="CMemoryInputStream.h">
-      <Filter>Исходные файлы</Filter>
+    <ClInclude Include="COutputStreamEnctyptor.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="COutputStreamCompressor.h">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="CInputStreamDecompressor.h">
-      <Filter>Исходные файлы</Filter>
+    <ClInclude Include="COutputStreamDecorator.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="CMemoryOutputStream.h">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="CFileOutputStream.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="CEncoder.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="COutputStreamEnctyptor.h">
-      <Filter>Исходные файлы</Filter>
+    <ClInclude Include="CMemoryInputStream.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="CInputStreamDecryptor.h">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="COStreamDecorator.h">
-      <Filter>Исходные файлы</Filter>
+    <ClInclude Include="CInputStreamDecompressor.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CFileOutputStream.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CFileInputStream.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="IStream.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="RLEPacket.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CEncoder.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CInputStreamDecorator.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="OStream.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

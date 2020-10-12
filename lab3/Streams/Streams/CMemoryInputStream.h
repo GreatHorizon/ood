@@ -5,14 +5,14 @@
 class CMemoryInputStream : public IInputStream
 {
 public:
-	CMemoryInputStream(std::vector<uint8_t>& memoryStream)
-		: m_memoryStream(memoryStream)
+	CMemoryInputStream(std::vector<uint8_t>& buffer)
+		: m_buffer(buffer)
 	{
 	}
 
-	bool IsEOF() const override
+	bool IsEOF() override
 	{
-		return m_memoryStream.size() == m_position;
+		return m_buffer.size() == m_position;
 	};
 
 	uint8_t ReadByte() override
@@ -22,14 +22,14 @@ public:
 			throw std::ios_base::failure("Fail to read data. Out of range");
 		}
 
-		return m_memoryStream[m_position++];
+		return m_buffer[m_position++];
 	}
 
 	std::streamsize ReadBlock(void* dstBuffer, std::streamsize size) override
 	{
-		if (m_memoryStream.size() - m_position < size)
+		if (m_buffer.size() - m_position < static_cast<size_t>(size))
 		{
-			size = m_memoryStream.size() - m_position;
+			size = m_buffer.size() - m_position;
 		}
 
 		auto data = static_cast<uint8_t*>(dstBuffer);
@@ -42,6 +42,6 @@ public:
 	}
 
 private:
-	std::vector<uint8_t>& m_memoryStream;
-	unsigned m_position = 0;
+	std::vector<uint8_t>& m_buffer;
+	size_t m_position = 0;
 };

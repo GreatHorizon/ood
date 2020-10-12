@@ -4,7 +4,7 @@
 class CFileInputStream : public IInputStream
 {
 public:
-	CFileInputStream(std::string fileName)
+	CFileInputStream(std::string const& fileName)
 		: m_stream(fileName, std::ios::binary)
 	{
 		if (!m_stream.is_open())
@@ -13,20 +13,21 @@ public:
 		}
 	}
 
-	bool IsEOF() const override
+	bool IsEOF() override
 	{
+		m_stream.peek();
 		return m_stream.eof();
 	};
 
 	uint8_t ReadByte() override
 	{
 		char currentByte;
-		m_stream.get(currentByte);
+
 		if (IsEOF())
 		{
 			throw std::ios_base::failure("Fail to read byte from file");
 		}
-
+		m_stream.get(currentByte);
 		return (uint8_t)currentByte;
 	}
 

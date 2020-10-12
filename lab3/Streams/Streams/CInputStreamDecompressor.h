@@ -1,14 +1,16 @@
 #pragma once
 #include "IStream.h"
-#include "IStreamDecorator.h"
+#include "CInputStreamDecorator.h"
 
-class CInputStreamDecompressor : public IStreamDecorator
+class CInputStreamDecompressor : public CInputStreamDecorator
 {
 public:
 	CInputStreamDecompressor(std::unique_ptr<IInputStream>&& stream)
-		: IStreamDecorator(std::move(stream))
+		: CInputStreamDecorator(std::move(stream))
 	{
 	}
+
+
 
 	uint8_t ReadByte() override
 	{

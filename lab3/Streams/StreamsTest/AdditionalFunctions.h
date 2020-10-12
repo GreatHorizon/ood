@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 
 inline std::string GetStringFromStream(std::string const& fileName)

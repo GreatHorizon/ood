@@ -25,10 +25,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Streams\CMemoryInputStream.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Streams\CMemoryOutputStream.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AdditionalFunctions.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -45,9 +48,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MemoryInputStreamTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AdditionalFunctions.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StreamCompressionTest.cpp">

@@ -103,4 +103,15 @@ BOOST_AUTO_TEST_SUITE(file_stream_compression_test)
 		BOOST_CHECK_EQUAL(block[3], 'c');
 	}
 
+	BOOST_AUTO_TEST_CASE(can_compress_empty_file)
+	{
+		{
+			auto stream = std::make_unique<CFileOutputStream>(filePath);
+			auto compressedStream = std::make_unique<COutputStreamCompressor>(std::move(stream));
+		}
+	
+		BOOST_CHECK(GetStringFromStream(filePath) == "");
+	}
+
+
 BOOST_AUTO_TEST_SUITE_END();

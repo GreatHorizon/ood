@@ -14,7 +14,7 @@ struct IFileStreamFixture
 BOOST_FIXTURE_TEST_SUITE(input_file_stream_test, IFileStreamFixture)
 	BOOST_AUTO_TEST_CASE(should_throw_an_exception_when_cant_open_file)
 	{
-		BOOST_CHECK_THROW(std::make_unique<CFileInputStream>("nonexistent_file_name.dat"),
+		BOOST_CHECK_THROW(CFileInputStream("nonexistent_file_name.dat"),
 			std::ios_base::failure);
 	}
 

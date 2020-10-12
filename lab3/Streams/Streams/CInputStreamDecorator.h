@@ -1,19 +1,20 @@
 #pragma once
+#pragma once
 
 #include "RLEPacket.h"
 #include "IStream.h"
 #include <memory>
 
-class IStreamDecorator : public IInputStream
+class CInputStreamDecorator : public IInputStream
 {
 public:
-	bool IsEOF() const
+	bool IsEOF()
 	{
 		return m_stream->IsEOF();
 	}
 
 protected:
-	IStreamDecorator(std::unique_ptr<IInputStream>&& stream)
+	CInputStreamDecorator(std::unique_ptr<IInputStream>&& stream)
 		: m_stream(std::move(stream))
 	{
 	}

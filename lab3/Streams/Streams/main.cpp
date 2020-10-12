@@ -47,7 +47,7 @@ ParsedArgs GetParseArgs(int argc, char** argv)
 		throw std::invalid_argument("Invalid argument count");
 	}
 
-	for (int i = 1; i < argc - 2; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		std::string option = argv[i]; 
 
@@ -137,19 +137,16 @@ int main(int argc, char** argv)
 	try
 	{
 		arguments = GetParseArgs(argc, argv);
+		auto FileInputStream = std::make_unique<CFileInputStream>(arguments.names.m_inputStreamName);
+		auto FileOutputStream = std::make_unique<CFileOutputStream>(arguments.names.m_outputStreamName);
+		auto iStream = DecorateInputStream(arguments.options, std::move(FileInputStream));
+		auto oStream = DecorateOutputStream(arguments.options, std::move(FileOutputStream));
+		CopyStreams(iStream, oStream);
 	}
-	catch (const std::invalid_argument& e)
+	catch (std::exception& e)
 	{
 		std::cout << e.what();
 	}
 
-	auto FileInputStream = std::make_unique<CFileInputStream>(arguments.names.m_inputStreamName);
-	auto FileOutputStream = std::make_unique<CFileOutputStream>(arguments.names.m_outputStreamName);
-
-
-	auto iStream = DecorateInputStream(arguments.options, std::move(FileInputStream));
-	auto oStream = DecorateOutputStream(arguments.options, std::move(FileOutputStream));
-
-	CopyStreams(iStream, oStream);
-	return 0;
+ 	return 0;
 }

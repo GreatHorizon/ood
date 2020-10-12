@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,6 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,22 +144,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IStreamDecorator.h" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="OStream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CEncoder.h" />
     <ClInclude Include="CFileInputStream.h" />
     <ClInclude Include="CFileOutputStream.h" />
     <ClInclude Include="CInputStreamDecompressor.h" />
+    <ClInclude Include="CInputStreamDecorator.h" />
     <ClInclude Include="CInputStreamDecryptor.h" />
     <ClInclude Include="CMemoryOutputStream.h" />
     <ClInclude Include="COutputStreamCompressor.h" />
     <ClInclude Include="CMemoryInputStream.h" />
     <ClInclude Include="COutputStreamEnctyptor.h" />
     <ClInclude Include="IStream.h" />
-    <ClInclude Include="COStreamDecorator.h" />
+    <ClInclude Include="COutputStreamDecorator.h" />
+    <ClInclude Include="OStream.h" />
     <ClInclude Include="RLEPacket.h" />
   </ItemGroup>
   <ItemGroup>

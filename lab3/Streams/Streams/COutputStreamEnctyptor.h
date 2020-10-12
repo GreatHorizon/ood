@@ -1,12 +1,12 @@
 #pragma once
-#include "COStreamDecorator.h"
+#include "COutputStreamDecorator.h"
 #include "CEncoder.h"
 
-class COutputStreamEncryptor : public COStreamDecorator
+class COutputStreamEncryptor : public COutputStreamDecorator
 {
 public:
 	COutputStreamEncryptor(std::unique_ptr<IOutputStream>&& stream, unsigned key)
-		: COStreamDecorator(std::move(stream))
+		: COutputStreamDecorator(std::move(stream))
 		, m_encoder(CEncoder(key))
 	{
 	}

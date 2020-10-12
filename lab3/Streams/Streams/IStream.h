@@ -8,7 +8,7 @@ class IInputStream
 public:
 	// Возвращает признак достижения конца данных потока
 	// Выбрасывает исключение std::ios_base::failuer в случае ошибки
-	virtual bool IsEOF() const = 0;
+	virtual bool IsEOF() = 0;
 
 	// Считывает байт из потока. 
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки

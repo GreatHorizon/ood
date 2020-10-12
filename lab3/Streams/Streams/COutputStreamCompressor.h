@@ -1,8 +1,8 @@
 #pragma once
 #include "OStream.h"
-#include "COStreamDecorator.h"
+#include "COutputStreamDecorator.h"
 
-class COutputStreamCompressor : public COStreamDecorator
+class COutputStreamCompressor : public COutputStreamDecorator
 {
 public:
 	~COutputStreamCompressor()
@@ -18,7 +18,7 @@ public:
 	}
 
 	COutputStreamCompressor(std::unique_ptr<IOutputStream>&& stream)
-		: COStreamDecorator(std::move(stream))
+		: COutputStreamDecorator(std::move(stream))
 	{
 	}
 
@@ -52,10 +52,13 @@ public:
 private:
 	void FlushPacket()
 	{
-		uint8_t packet[] = { m_packet.byteCount, m_packet.currentByte };
-		m_stream->WriteBlock(packet, 2);
-		m_packet.byteCount = 0;
-		m_packet.currentByte = 0;
+		if (m_packet.byteCount > 0)
+		{
+			uint8_t packet[] = { m_packet.byteCount, m_packet.currentByte };
+			m_stream->WriteBlock(packet, 2);
+			m_packet.byteCount = 0;
+			m_packet.currentByte = 0;
+		}
 	}
 
 	RLEPacket m_packet;
