@@ -23,20 +23,6 @@ inline std::string GetDesctiption(std::istream& in)
 class CMenu
 {
 public:
-
-	struct Item
-	{
-		Item(const std::string& shortcut, const std::string& description, std::shared_ptr<ICommand> const& command)
-			: shortcut(shortcut)
-			, description(description)
-			, command(command)
-		{}
-
-		std::string shortcut;
-		std::string description;
-		std::shared_ptr<ICommand> command;
-	};
-
 	void AddItem(
 		const std::string& shortcut,
 		const std::string& description,
@@ -80,13 +66,20 @@ public:
 	{
 		m_exit = true;
 	}
-
-	std::vector<Item> const& GetCommands() const
-	{
-		return m_items;
-	}
-
 private:
+	struct Item
+	{
+		Item(const std::string& shortcut, const std::string& description, std::shared_ptr<ICommand> const& command)
+			: shortcut(shortcut)
+			, description(description)
+			, command(command)
+		{}
+
+		std::string shortcut;
+		std::string description;
+		std::shared_ptr<ICommand> command;
+	};
+
 	bool ExecuteCommand(const std::string& command)
 	{
 		m_exit = false;
@@ -110,7 +103,6 @@ private:
 	{
 		std::string commandName;
 		auto macros = std::make_shared<CMacroCommand>();
-		auto existingCommands = GetCommands();
 		
 		std::cout << "Enter list of commands\n";
 		std::cout << "  > ";
@@ -118,12 +110,12 @@ private:
 
 		while (commandName != "end_macro")
 		{
-			auto command = std::find_if(existingCommands.begin(), existingCommands.end(), [commandName](CMenu::Item const& item)
+			auto command = std::find_if(m_items.begin(), m_items.end(), [commandName](CMenu::Item const& item)
 				{
 					return item.shortcut == commandName;
 				});
 
-			if (command != existingCommands.end())
+			if (command != m_items.end())
 			{
 				macros->AddCommand(command->command);
 			}
@@ -139,6 +131,7 @@ private:
 		return macros;
 	}
 
+	
 	std::vector<Item> m_items;
 	bool m_exit = false;
 };

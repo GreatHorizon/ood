@@ -61,36 +61,6 @@ CMenuFP::Command CreateMacroCommand(Commands&& commands)
 	};
 }
 
-template <typename Commands>
-Commands GetMacrosFunctions(std::vector<CMenuFP::Item> const& existingCommands)
-{
-	std::string commandName;
-	std::cout << "  > ";
-	std::cin >> commandName;
-	std::vector<CMenuFP::Command> commands;
-
-	while (commandName != "end_macro") 
-	{
-		auto command = std::find_if(existingCommands.begin(), existingCommands.end(), [commandName](CMenuFP::Item const& item)
-		{
-			return item.shortcut == commandName;
-		});
-
-		if (command != existingCommands.end())
-		{
-			commands.push_back(command->command);
-		}
-		else
-		{
-			std::cout << "Unknown command\n";
-		}
-
-		std::cout << "  > ";
-		std::cin >> commandName;
-	}
-	return commands;
-}
-
 void TestMenuWithClassicCommandPattern()
 {
 	Robot robot;
@@ -161,7 +131,7 @@ void TestMenuWithFunctionalCommandPattern()
 		macrosDescription = GetDesctiption(std::cin);
 		std::cout << "Enter list of commands\n";
 		menu.AddItem(macrosName, macrosDescription, CreateMacroCommand<std::vector<CMenuFP::Command>>
-			(GetMacrosFunctions<std::vector<CMenuFP::Command>>(menu.GetCommands())));
+			(menu.GetMacrosFunctions<std::vector<CMenuFP::Command>>()));
 	});
 
 	menu.Run();
