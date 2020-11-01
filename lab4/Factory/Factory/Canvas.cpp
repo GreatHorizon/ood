@@ -17,22 +17,22 @@ void CCanvas::DrawLine(const CPoint& firstPoint, const CPoint& secondPoint)
 {
 	glLineWidth(2);
 	glColor3d(m_color.m_red, m_color.m_green, m_color.m_blue);
+	glEnable(GL_LINE_SMOOTH);
 	glBegin(GL_LINES);
-	
 
 	glVertex2d(firstPoint.GetX(), firstPoint.GetY());
 	glVertex2d(secondPoint.GetX(), secondPoint.GetY());
 
 	glEnd();
 
-	glEnable(GL_LINE_SMOOTH);
+	
 }
 
 void CCanvas::DrawEllipse(CPoint const& center, double horizontalRadius, double verticalRadius)
 {
 	glLineWidth(4);
 	glColor3d(m_color.m_red, m_color.m_green, m_color.m_blue);
-
+	glEnable(GL_LINE_SMOOTH);
 	glBegin(GL_LINE_LOOP);
 
 	for (int i = 0; i < 360; i++) {
@@ -41,5 +41,5 @@ void CCanvas::DrawEllipse(CPoint const& center, double horizontalRadius, double 
 	}
 
 	glEnd();
-	glEnable(GL_LINE_SMOOTH);
+	
 }

@@ -4,7 +4,6 @@
 #include "History.h"
 #include <memory>
 
-
 class CDocument : public IDocument
 {
 public:
