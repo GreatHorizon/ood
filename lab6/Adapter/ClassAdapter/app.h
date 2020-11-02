@@ -33,7 +33,7 @@ namespace app
 			auto g = ((rgbColor >> 8) & 255) / 255.0f;
 			auto b = (rgbColor & 255) / 255.0f;
 
-			m_color = CRGBAColor(r, g, b, m_color.a);
+			m_color = CRGBAColor(r, g, b, 1);
 		}
 
 		void SetOpacity(float opacity)

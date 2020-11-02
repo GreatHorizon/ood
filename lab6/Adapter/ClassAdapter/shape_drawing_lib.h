@@ -39,6 +39,7 @@ namespace shape_drawing_lib
 			canvas.LineTo(m_thirdVertex.x, m_thirdVertex.y);
 			canvas.LineTo(m_firstVertex.x, m_firstVertex.y);
 		}
+
 	private:
 		Point m_firstVertex;
 		Point m_secondVertex;
