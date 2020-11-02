@@ -72,4 +72,23 @@ BOOST_FIXTURE_TEST_SUITE(ObjectAdapterTest, ObjectAdapterFixture)
 
 		BOOST_CHECK_EQUAL(stream.str(), "<draw>\n  <line fromX=\"5\" fromY=\"4\" toX=\"1\" toY=\"1\"/>\n    <color r=\"0\" g=\"0\" b=\"0\" a=\"1\" />\n  </line>\n</draw>\n");
 	}
+
+	BOOST_AUTO_TEST_CASE(after_set_color_opacity_should_be_1)
+	{
+		renderer.BeginDraw();
+		adapter.SetColor(0xffffff);
+		adapter.MoveTo(5, 4);
+		adapter.LineTo(1, 1);
+		renderer.EndDraw();
+		BOOST_CHECK_EQUAL(stream.str(), "<draw>\n  <line fromX=\"5\" fromY=\"4\" toX=\"1\" toY=\"1\"/>\n    <color r=\"1\" g=\"1\" b=\"1\" a=\"1\" />\n  </line>\n</draw>\n");
+	}
+
+	BOOST_AUTO_TEST_CASE(when_start_drawing_without_move_to_start_point_should_be_zero)
+	{
+		renderer.BeginDraw();
+		adapter.LineTo(1, 1);
+		renderer.EndDraw();
+		BOOST_CHECK_EQUAL(stream.str(), "<draw>\n  <line fromX=\"0\" fromY=\"0\" toX=\"1\" toY=\"1\"/>\n    <color r=\"0\" g=\"0\" b=\"0\" a=\"1\" />\n  </line>\n</draw>\n");
+	}
+
 BOOST_AUTO_TEST_SUITE_END()

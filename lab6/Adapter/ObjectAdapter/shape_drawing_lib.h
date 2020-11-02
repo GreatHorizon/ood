@@ -24,7 +24,7 @@ namespace shape_drawing_lib
 	{
 	public:
 		CTriangle(const Point& p1, const Point& p2, const Point& p3, uint32_t color = 0x000000)
-			: m_fistVertex(p1)
+			: m_firstVertex(p1)
 			, m_secondVertex(p2)
 			, m_thirdVertex(p3)
 			, m_color(color)
@@ -34,15 +34,13 @@ namespace shape_drawing_lib
 		void Draw(graphics_lib::ICanvas& canvas)const override
 		{
 			canvas.SetColor(m_color);
-			canvas.MoveTo(m_fistVertex.x, m_fistVertex.y);
+			canvas.MoveTo(m_firstVertex.x, m_firstVertex.y);
 			canvas.LineTo(m_secondVertex.x, m_secondVertex.y);
 			canvas.LineTo(m_thirdVertex.x, m_thirdVertex.y);
-
-			canvas.MoveTo(m_secondVertex.x, m_secondVertex.y);
-			canvas.LineTo(m_thirdVertex.x, m_thirdVertex.y);
+			canvas.LineTo(m_firstVertex.x, m_firstVertex.y);
 		}
 	private:
-		Point m_fistVertex;
+		Point m_firstVertex;
 		Point m_secondVertex;
 		Point m_thirdVertex;
 		uint32_t m_color;
@@ -64,11 +62,9 @@ namespace shape_drawing_lib
 			canvas.SetColor(m_color);
 			canvas.MoveTo(m_leftTop.x, m_leftTop.y);
 			canvas.LineTo(m_leftTop.x + m_width, m_leftTop.y);
+			canvas.LineTo(m_leftTop.x + m_width, m_leftTop.y - m_height);
 			canvas.LineTo(m_leftTop.x, m_leftTop.y - m_height);
-
-			canvas.MoveTo(m_leftTop.x + m_width, m_leftTop.y - m_height);
-			canvas.LineTo(m_leftTop.x + m_width, m_leftTop.y);
-			canvas.LineTo(m_leftTop.x, m_leftTop.y - m_height);
+			canvas.LineTo(m_leftTop.x, m_leftTop.y);
 		}
 	private:
 		Point m_leftTop;

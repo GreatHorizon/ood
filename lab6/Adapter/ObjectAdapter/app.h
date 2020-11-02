@@ -4,7 +4,6 @@
 #include "modern_graphics_lib.h"
 #include "shape_drawing_lib.h"
 
-
 // Пространство имен приложения (доступно для модификации)
 namespace app
 {
@@ -26,6 +25,7 @@ namespace app
 		void LineTo(int x, int y) override
 		{
 			m_renderer.DrawLine(m_startPoint, { x, y }, m_color);
+			m_startPoint = { x, y };
 		}
 
 		void SetColor(uint32_t rgbColor) override
@@ -34,14 +34,13 @@ namespace app
 			auto g = ((rgbColor >> 8) & 255) / 255.0f;
 			auto b = (rgbColor & 255) / 255.0f;
 
-			m_color = CRGBAColor(r, g, b, m_color.a);
+			m_color = CRGBAColor(r, g, b, 1);
 		}
 
 		void SetOpacity(float opacity)
 		{
 			m_color.a = opacity;
 		}
-
 
 	private:
 		modern_graphics_lib::CModernGraphicsRenderer& m_renderer;
