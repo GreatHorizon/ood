@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="MultiGumballMachineWithState.h" />
     <ClInclude Include="NaiveMultiGumballMachine.h" />
   </ItemGroup>

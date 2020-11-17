@@ -12,12 +12,14 @@ namespace with_state
 		virtual unsigned GetBallCount() const = 0;
 		virtual unsigned GetQuarterCount() const = 0;
 
+		virtual void Refill(unsigned count) = 0;
 		virtual void SetSoldOutState() = 0;
 		virtual void SetNoQuarterState() = 0;
 		virtual void SetSoldState() = 0;
 		virtual void SetHasQuarterState() = 0;
 		virtual void AddQuarter() = 0;
 		virtual void ReturnQuarters() = 0;
+		virtual void SetNumberOfBalls(unsigned count) = 0;
 
 		virtual ~IGumballMachine() = default;
 	};
@@ -25,6 +27,7 @@ namespace with_state
 	class IState
 	{
 	public:
+		virtual void Refill(unsigned count) = 0;
 		virtual void InsertQuarter() = 0;
 		virtual void EjectQuarter() = 0;
 		virtual void TurnCrank() = 0;
@@ -53,6 +56,11 @@ namespace with_state
 		void TurnCrank() override
 		{
 			std::cout << "Turning twice doesn't get you another gumball\n";
+		}
+
+		void Refill(unsigned count) override
+		{
+			std::cout << "Sorry, you cant refill now\n";
 		}
 
 		void Dispense() override
@@ -107,6 +115,17 @@ namespace with_state
 			std::cout << "You turned but there's no gumballs\n";
 		}
 
+		void Refill(unsigned count) override
+		{
+			m_gumballMachine.SetNumberOfBalls(count);
+
+			if (count > 0)
+			{
+				m_gumballMachine.GetQuarterCount() > 0 ? m_gumballMachine.SetHasQuarterState()
+					: m_gumballMachine.SetNoQuarterState();
+			}
+		}
+
 		void Dispense() override
 		{
 			std::cout << "No gumball dispensed\n";
@@ -138,6 +157,11 @@ namespace with_state
 			{
 				std::cout << "You can't insert another quarter\n";
 			}
+		}
+
+		void Refill(unsigned count) override
+		{
+			m_gumballMachine.SetNumberOfBalls(count);
 		}
 
 		void EjectQuarter() override
@@ -189,6 +213,11 @@ namespace with_state
 			std::cout << "You turned but there's no quarter\n";
 		}
 
+		void Refill(unsigned count) override
+		{
+			m_gumballMachine.SetNumberOfBalls(count);
+		}
+
 		void Dispense() override
 		{
 			std::cout << "You need to pay first\n";
@@ -211,12 +240,17 @@ namespace with_state
 			, m_noQuarterState(*this)
 			, m_hasQuarterState(*this)
 			, m_state(&m_soldOutState)
-			, m_ballCount(numBalls)
+			, m_numberOfBalls(numBalls)
 		{
-			if (m_ballCount > 0)
+			if (m_numberOfBalls > 0)
 			{
 				m_state = &m_noQuarterState;
 			}
+		}
+
+		void Refill(unsigned ballCount)
+		{
+			m_state->Refill(ballCount);
 		}
 
 		void EjectQuarter()
@@ -244,12 +278,12 @@ Inventory: %1% gumball%2%
 Quarters: %3%
 Machine is %4%
 )");
-			return (fmt % m_ballCount % (m_ballCount != 1 ? "s" : "") % m_quarterCount % m_state->ToString()).str();
+			return (fmt % m_numberOfBalls % (m_numberOfBalls != 1 ? "s" : "") % m_quarterCount % m_state->ToString()).str();
 		}
 	private:
 		unsigned GetBallCount() const override
 		{
-			return m_ballCount;
+			return m_numberOfBalls;
 		}
 
 		unsigned GetQuarterCount() const override
@@ -259,10 +293,10 @@ Machine is %4%
 
 		virtual void ReleaseBall() override
 		{
-			if (m_ballCount != 0)
+			if (m_numberOfBalls != 0)
 			{
 				std::cout << "A gumball comes rolling out the slot...\n";
-				--m_ballCount;
+				--m_numberOfBalls;
 				--m_quarterCount;
 			}
 		}
@@ -300,8 +334,18 @@ Machine is %4%
 		{
 			m_quarterCount++;
 		}
+
+		void SetNumberOfBalls(unsigned count)
+		{
+			m_numberOfBalls = count;
+			if (count == 0)
+			{
+				SetSoldOutState();
+			}
+		}
+
 	private:
-		unsigned m_ballCount = 0;
+		unsigned m_numberOfBalls = 0;
 		unsigned m_quarterCount = 0;
 		CSoldState m_soldState;
 		CSoldOutState m_soldOutState;
