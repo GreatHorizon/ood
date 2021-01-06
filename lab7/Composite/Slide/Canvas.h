@@ -3,6 +3,39 @@
 #include "ICanvas.h"
 #include "Point.h"
 #include "../lib/include/GLFW/glfw3.h"
+#include "iostream"
+
+
+inline double NormalizeColorÑomponent(double component)
+{
+	if (component > 255)
+	{
+		component = 255;
+	}
+
+	if (component < 0)
+	{
+		component = 0;
+	}
+
+	return component;
+}
+
+
+inline double NormalizeOpacity(double opacity)
+{
+	if (opacity > 1)
+	{
+		opacity = 1;
+	}
+
+	if (opacity < 0)
+	{
+		opacity = 0;
+	}
+
+	return opacity;
+}
 
 struct RGBA
 {
@@ -12,13 +45,14 @@ struct RGBA
 	double m_opacity;
 
 	RGBA(double red = 255, double green = 255, double blue = 255, double opacity = 1)
-		: m_red(red)
-		, m_green(green)
-		, m_blue(blue)
-		, m_opacity(opacity)
+		: m_red(NormalizeColorÑomponent(red))
+		, m_green(NormalizeColorÑomponent(green))
+		, m_blue(NormalizeColorÑomponent(blue))
+		, m_opacity(NormalizeOpacity(opacity))
 	{
 	}
 };
+
 
 inline RGBA GetRGBA(RGBAColor color)
 {

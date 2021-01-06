@@ -13,7 +13,7 @@ public:
 	std::shared_ptr<IOutlineStyle> GetOutlineStyle() const;
 	std::shared_ptr<IStyle> GetFillStyle() const;
 	std::shared_ptr<IGroup> GetGroup();
-	void Draw(ICanvas& canvas) const override;
+	void Draw(ICanvas& canvas) const override final;
 protected:
 	virtual void CurrentShapeDrawing(ICanvas& canvas) const = 0;
 

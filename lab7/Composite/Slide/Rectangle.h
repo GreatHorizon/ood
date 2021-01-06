@@ -17,7 +17,7 @@ public:
 	void SetFrame(const RectD& rect);
 
 	CRectangle(const CPoint& leftTop, double width, double height);
-
+protected:
 	void CurrentShapeDrawing(ICanvas& canvas) const override;
 
 private:

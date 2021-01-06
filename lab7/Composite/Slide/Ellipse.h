@@ -11,6 +11,7 @@ public:
 	CEllipse(CPoint const& center, double horizontalRadius, double verticalRadius);
 	std::optional<RectD> GetFrame() const;
 	void SetFrame(const RectD& rect);
+protected:
 	void CurrentShapeDrawing(ICanvas& canvas) const override;
 private:
 	double m_horizontalRadius;

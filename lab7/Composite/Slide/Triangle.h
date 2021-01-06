@@ -12,6 +12,7 @@ public:
 	std::optional<RectD> GetFrame() const;
 	void SetFrame(const RectD& rect);
 	CTriangle(CPoint const& firstVertex, CPoint const& secondVertex, CPoint const& thirdVertex);
+protected:
 	void CurrentShapeDrawing(ICanvas& canvas) const override;
 
 private:
